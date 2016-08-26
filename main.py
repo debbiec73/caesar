@@ -15,11 +15,44 @@
 # limitations under the License.
 #
 import webapp2
+from caesar import encrypt
+
+rot_form = """
+<form action="/" method="post">
+    <label>
+        rotate by
+        <input type="number" name="rotation" value="0"/>
+        <br>
+        <textarea input type="text" name="text" style="height: 100px; width: 400px;">{0}</textarea>
+        <br>
+    </label>
+    <input type="submit" value="Submit"/>
+</form>
+"""
 
 class MainHandler(webapp2.RequestHandler):
+
     def get(self):
-        self.response.write('Hello world!')
+        clean_text = rot_form.format("")
+        self.response.out.write(clean_text)
+        #response = page_header + rot_form %{"answer": answer} + page_footer
+        #self.response.write(response)
+        #self.response.out.write(rot_form %{'answer': answer})
+#class Rotate(webapp2.RequestHandler):
+    #""" Rotates text based on user input
+    #"""
+    def post(self):
+        answer = ''
+        rot = self.request.get('rotation')
+
+        user_text = self.request.get('text')
+
+        answer = encrypt(user_text, int(rot))
+        self.response.out.write(rot_form.format(answer))
+        #response = page_header + "<p>" + answer + "</p>" + page_footer
+        #self.response.out.write(rot_form %{"answer": answer})
+        #self.response.write(response)
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler)
-], debug=True)
+    ], debug=True)
